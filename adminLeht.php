@@ -59,12 +59,6 @@ function isAdmin()
 <body>
 <?php
 session_start();?>
-    <?php
-    if(isset($_SESSION['kasutaja'])){
-        ?>
-        <h1>Tere, <?="$_SESSION[kasutaja]"?></h1>
-        <?php
-    } ?>
 <div>
     <?php
     if(isAdmin()){
@@ -141,7 +135,7 @@ else
                     <?php
                 } else {
                     ?>
-                <li> <a href="?login">Logi sisse</a></li>
+                <li> <a href="login.php">Logi sisse</a></li>
                     <?php
                 }
                 ?>

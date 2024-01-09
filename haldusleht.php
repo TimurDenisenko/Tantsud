@@ -36,13 +36,19 @@ function isAdmin()
     else
         return false;
 }
-if (isset($_REQUEST["login"]))
+if (isset($_REQUEST["kommentid"]))
 {
-    ?>
-    <div class="modal">
-        <?php require("login.php"); ?>
-    </div>
-    <?php
+    global $yhendus;
+    if (empty($_REQUEST["komment"]))
+    {
+        header("Location: $_SERVER[PHP_SELF]");
+        return;
+    }
+    $uuskomment = $_REQUEST["komment"];
+    $kask=$yhendus->prepare('UPDATE tantsud SET kommentaarid=CONCAT(kommentaarid,?) WHERE id=?');
+    $kask->bind_param("si",$uuskomment,$_REQUEST["kommentid"]);
+    $kask->execute();
+    header("Location: $_SERVER[PHP_SELF]");
 }
 ?>
 <!doctype html>
@@ -87,7 +93,7 @@ session_start();?>
                     <?php
                 } else {
                     ?>
-                <li> <a href="?login">Logi sisse</a></li>
+                <li> <a href="login.php">Logi sisse</a></li>
                     <?php
                 }
                 ?>
@@ -106,6 +112,7 @@ session_start();?>
         <th>Tantsupaari nimi</th>
         <th>Punktid</th>
         <th>Ava päev</th>
+        <th>Kommentaar</th>
         <?php
         if (!isAdmin()){
         ?>
@@ -115,8 +122,8 @@ session_start();?>
     </tr>
     <?php
     global $yhendus;
-    $kask = $yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev, avalik FROM tantsud");
-    $kask->bind_result($id,$tantsupaar,$punktid,$ava_paev,$avalik);
+    $kask = $yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev, avalik, kommentaarid FROM tantsud");
+    $kask->bind_result($id,$tantsupaar,$punktid,$ava_paev,$avalik,$komment);
     $kask->execute();
     while($kask->fetch())
     {
@@ -125,8 +132,15 @@ session_start();?>
             echo "<tr><td>$tantsupaar</td>";
             echo "<td>$punktid</td>";
             echo "<td>$ava_paev</td>";
+            echo "<td>$komment</td>";
             if (!isAdmin()) {
-                echo "<td><a href='?heatans=$id'>Lisa punkt | </a><a href='?halbtans=$id'>Eemalda punkt</a></td>";
+                echo "<td>
+<form action='?'>
+    <input type='hidden' name='kommentid' id='$id'>
+    <input type='text' name='komment' id='komment'>
+    <input type='submit' value='OK'>
+</form>
+<a href='?heatans=$id'>Lisa punkt | </a><a href='?halbtans=$id'>Eemalda punkt</a></td>";
             }
             echo "</tr>";
         }

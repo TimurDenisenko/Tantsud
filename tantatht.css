@@ -51,7 +51,7 @@ h2{
     padding-left: 0.25em;
 }
 input[type=text] {
-    width: 70%;
+    width: 60%;
     padding: 12px 20px;
     margin: 8px 0;
     display: inline-block;
@@ -66,7 +66,7 @@ label{
 }
 
 input[type=submit] {
-    width: 10%;
+    width: 15%;
     background-color: gray;
     color: white;
     padding: 12px 20px;
@@ -116,31 +116,4 @@ nav a {
 nav a:hover {
     background-color: #ddd;
     color: black;
-}
-.modal {
-    width: 200px;
-    height: 200px;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    overflow: hidden;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-flow: column nowrap;
-    justify-content: center; /* см. ниже */
-    align-items: center;
-    z-index: 99;
-    /* Чтобы окно не прилипало к границе
-    браузера установим отступы */
-    padding:30px 0;
-}
-.modal__window {
-    background: #fff;
-    width: 200px;
-    height: 200px;
-    transition: transform 0.15s ease 0s, opacity 0.15s ease 0s;
-    transform: scale(1);
 }

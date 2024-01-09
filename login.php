@@ -1,6 +1,7 @@
 <?php
 require_once("conf.php");
 global $yhendus;
+session_start();
 
 //kontrollime kas väljad  login vormis on täidetud
 if (!empty($_POST['login']) && !empty($_POST['pass'])) {
@@ -20,6 +21,10 @@ if (!empty($_POST['login']) && !empty($_POST['pass'])) {
         $_SESSION['tuvastamine'] = 'misiganes';
         $_SESSION['kasutaja'] = $login;
         $_SESSION['onAdmin'] = $onAdmin;
+        if ($_SESSION['onAdmin']==1)
+            header('Location: adminLeht.php');
+        else
+            header('Location: haldusleht.php');
         $yhendus->close();
         exit();
     } else {
