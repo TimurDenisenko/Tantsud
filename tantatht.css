@@ -1,0 +1,146 @@
+html{
+    text-align: center;
+    background-image: linear-gradient(white,black);
+}
+body{
+    height: 100vh;
+}
+table,div{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+div{
+    width: 1000px;
+    height: 100%;
+    background: lightgray;
+}
+td, th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+a{
+    text-decoration: none;
+    color: darkblue;
+}
+a:hover{
+    color: blue;
+}
+h1,h2{
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 3em;
+    padding-left: 0.25em;
+}
+h1{
+    font-size: 25px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 3em;
+    padding-left: 0.25em;
+}
+h2{
+    font-size: 20px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    line-height: 3em;
+    padding-left: 0.25em;
+}
+input[type=text] {
+    width: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+label{
+    font-size: 20px;
+    padding: 12px 20px;
+    margin: 8px 0;
+}
+
+input[type=submit] {
+    width: 10%;
+    background-color: gray;
+    color: white;
+    padding: 12px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+tr:nth-child(even){background-color: #f2f2f2;}
+
+tr:hover {background-color: #ddd;}
+
+th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: gray;
+    color: white;
+}
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    text-align:center;
+    background: black;
+}
+li{
+    display:inline-block;
+}
+nav {
+    background-color: #333;
+    overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+nav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+/* Change the color of links on hover */
+nav a:hover {
+    background-color: #ddd;
+    color: black;
+}
+.modal {
+    width: 200px;
+    height: 200px;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    overflow: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center; /* см. ниже */
+    align-items: center;
+    z-index: 99;
+    /* Чтобы окно не прилипало к границе
+    браузера установим отступы */
+    padding:30px 0;
+}
+.modal__window {
+    background: #fff;
+    width: 200px;
+    height: 200px;
+    transition: transform 0.15s ease 0s, opacity 0.15s ease 0s;
+    transform: scale(1);
+}
