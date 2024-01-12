@@ -1,5 +1,7 @@
 <?php
-require_once("conf.php");
+session_start();
+ob_start();
+require_once("conf2.php");
 if (isset($_REQUEST["heatans"]))
 {
     global $yhendus;
@@ -7,6 +9,7 @@ if (isset($_REQUEST["heatans"]))
     $kask->bind_param("i",$_REQUEST["heatans"]);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
+    exit();
 }
 if (isset($_REQUEST["halbtans"]))
 {
@@ -15,6 +18,7 @@ if (isset($_REQUEST["halbtans"]))
     $kask->bind_param("i",$_REQUEST["halbtans"]);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
+    exit();
 }
 if (isset($_REQUEST["paarinimi"]) && !empty($_REQUEST["paarinimi"]))
 {
@@ -23,6 +27,7 @@ if (isset($_REQUEST["paarinimi"]) && !empty($_REQUEST["paarinimi"]))
     $kask->bind_param("s",$_REQUEST["paarinimi"]);
     $kask->execute();
     header("Location: $_SERVER[PHP_SELF]");
+    exit();
 }
 function isAdmin()
 {
@@ -36,19 +41,17 @@ function isAdmin()
     else
         return false;
 }
-if (isset($_REQUEST["kommentid"]))
-{
-    global $yhendus;
-    if (empty($_REQUEST["komment"]))
-    {
+if(isset($_REQUEST["komment"])){
+    if(!empty($_REQUEST["uuskomment"])){
+        global $yhendus;
+        $kask = $yhendus->prepare("UPDATE tantsud SET kommentaarid=CONCAT(kommentaarid, ?) WHERE id=?");
+        $kommentplus=$_REQUEST["uuskomment"]." \n";
+        $kask->bind_param("si", $kommentplus, $_REQUEST["komment"]);
+        $kask->execute();
         header("Location: $_SERVER[PHP_SELF]");
-        return;
+        exit();
+        $yhendus->close();
     }
-    $uuskomment = $_REQUEST["komment"];
-    $kask=$yhendus->prepare('UPDATE tantsud SET kommentaarid=CONCAT(kommentaarid,?) WHERE id=?');
-    $kask->bind_param("si",$uuskomment,$_REQUEST["kommentid"]);
-    $kask->execute();
-    header("Location: $_SERVER[PHP_SELF]");
 }
 ?>
 <!doctype html>
@@ -62,8 +65,6 @@ if (isset($_REQUEST["kommentid"]))
     <link rel="stylesheet" href="tantatht.css">
 </head>
 <body>
-<?php
-session_start();?>
 <header>
     <?php
     if(isset($_SESSION['kasutaja'])){
@@ -84,22 +85,23 @@ session_start();?>
                 if(isAdmin()) {
                 ?>
                 <li><a href="adminLeht.php">Admnistreerimisleht</a></li>
-                <?php } ?>
+                <?php }
+                if(isset($_SESSION['kasutaja'])){
+                ?>
                 <li><a href="haldusleht.php">Punktide lisamine</a></li>
-                <?php
+                <?php }
                 if(isset($_SESSION['kasutaja'])){
                     ?>
                 <li><a href="logout.php">Logi välja</a></li>
-                    <?php
-                } else {
-                    ?>
-                <li> <a href="login.php">Logi sisse</a></li>
                     <?php
                 }
                 ?>
             </ul>
         </div>
     </nav>
+    <?php
+if (isset($_SESSION['kasutaja'])){
+    ?>
 <h1>Tantsud tähtedega</h1>
 <h2>Punktide lisamine</h2>
 <form action="?">
@@ -132,21 +134,82 @@ session_start();?>
             echo "<tr><td>$tantsupaar</td>";
             echo "<td>$punktid</td>";
             echo "<td>$ava_paev</td>";
-            echo "<td>$komment</td>";
+            echo "<td>".nl2br(htmlspecialchars($komment))."</td>";
             if (!isAdmin()) {
                 echo "<td>
-<form action='?'>
-    <input type='hidden' name='kommentid' id='$id'>
-    <input type='text' name='komment' id='komment'>
-    <input type='submit' value='OK'>
-</form>
-<a href='?heatans=$id'>Lisa punkt | </a><a href='?halbtans=$id'>Eemalda punkt</a></td>";
+            <form action='?'>
+                <input type='hidden'  value='$id' name='komment'>
+                <input type='text' name='uuskomment' id='uuskomment'>
+                <input type='submit' value='OK'>
+            </form>
+            <a href='?heatans=$id'>Lisa punkt | </a><a href='?halbtans=$id'>Eemalda punkt</a></td>";
             }
             echo "</tr>";
         }
     }
     ?>
 </table>
+    <?php }
+else
+{
+    ?>
+    <nav>
+        <div>
+            <ul>
+                <?php
+                if(isset($_SESSION['kasutaja'])){
+                    ?>
+                    <li><a href="haldusleht.php">Punktide lisamine</a></li>
+                    <li><a href="logout.php">Logi välja</a></li>
+                    <?php
+                } else {
+                    ?>
+                        <h1 class="h1">Tantsud tähtedega</h1>
+                    <li>
+                        <button onclick="openModal()">Logi sisse</button>
+                        <div id="myModal" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal()">&times;</span>
+                                <?php include 'login.php'; ?>
+                            </div>
+                        </div>
+                        <script>
+                            function openModal() {
+                                document.getElementById('myModal').style.display = 'block';
+                            }
+
+                            function closeModal() {
+                                document.getElementById('myModal').style.display = 'none';
+                            }
+                        </script>
+                    </li>
+                    <li>
+                        <button onclick="openModal1()">Registreerimine</button>
+                        <div id="myModal1" class="modal">
+                            <div class="modal-content">
+                                <span class="close" onclick="closeModal1()">&times;</span>
+                                <?php include 'register.php'; ?>
+                            </div>
+                        </div>
+                        <script>
+                            function openModal1() {
+                                document.getElementById('myModal1').style.display = 'block';
+                            }
+
+                            function closeModal1() {
+                                document.getElementById('myModal1').style.display = 'none';
+                            }
+                        </script>
+                    </li>
+                    <?php
+                }
+                ?>
+            </ul>
+        </div>
+    </nav>
+    <?php
+}
+?>
 </div>
 </body>
 </html>
